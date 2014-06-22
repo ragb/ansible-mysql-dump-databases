@@ -1,0 +1,46 @@
+---
+
+
+# Creates basic users
+- name: user_{{item.username}}
+  user: name={{item.username}}
+    password={{item.password}}
+    groups={{item.get('groups', None)}}
+    shell={{item.shell}}
+    append=yes
+  with_items: common_users
+
+# Adds ssh keys for our users
+- name: user_ssh_key_{{item.username}}
+  authorized_key: user={{item.username}}
+    key="{{lookup("file", "public_keys/" + item.username + ".pub")}}"
+    state=present
+    manage_dir=true
+  with_items: common_users
+
+# Adds users to shudders
+- name: sudoers_{{item.username}}
+  template: src=sudoers_user.j2
+    dest=/etc/sudoers.d/{{item.username}}
+    mode=0440
+    owner=root
+    group=root
+    validate="visudo -cf %s"
+  when: item.sudo
+  with_items: common_users
+
+
+
+# Installs basic packages
+- name: performes dist upgrade
+  apt: upgrade=dist update_cache=yes
+
+
+# Installs core packages
+- name : Installs {{item}}
+  apt: name={{item}} state=latest
+  with_items: core_packages
+
+# Security stuff
+- include: secure_server.yml
+

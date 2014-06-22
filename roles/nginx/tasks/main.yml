@@ -1,0 +1,17 @@
+- name: Installs nginx ppa
+  apt_repository: repo=ppa:nginx/stable state=present
+
+- name: Installs nginx package
+  apt: name=nginx-extras state=latest
+
+- name: Remove nginx default site
+  file: path=/etc/nginx/sites-enabled/default state=absent
+  notify: Restart nginx
+
+
+- name: Opens http and https ports
+  ufw: rule=allow port={{item}} proto=tcp
+  with_items:
+    - http
+    - https
+

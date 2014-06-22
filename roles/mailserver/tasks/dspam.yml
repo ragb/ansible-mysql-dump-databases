@@ -1,0 +1,31 @@
+- name: Install dspam and related packages
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - dspam
+    - dovecot-antispam
+    - postfix-pcre
+    - dovecot-sieve
+
+- name: Create dspam directory
+  file: state=directory path=/decrypted/dspam group=dspam owner=dspam
+
+- name: Put dspam configuration files in place
+  copy: src=dspam/{{ item }} dest=/etc/dspam/{{ item }} owner=dspam group=dspam
+  with_items:
+    - default.prefs
+    - dspam.conf
+  notify:
+    - Restart postfix
+    - Restart dovecot
+
+- name: Put dspam postfix configuration in place
+  copy: src=postfix/dspam_filter_access dest=/etc/postfix/dspam_filter_access owner=root group=root
+  notify: Restart postfix
+
+- name: Put dspam dovecot configuration in place
+  copy: src=dovecot/conf.d/{{ item }} dest=/etc/dovecot/conf.d/{{ item }} owner=vmail group=dovecot
+  with_items:
+    - 20-imap.conf
+    - 90-plugin.conf
+  notify: Restart dovecot
+

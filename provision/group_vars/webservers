@@ -1,0 +1,4 @@
+ufw_http_open_tcp_ports:
+  - http
+  - https
+

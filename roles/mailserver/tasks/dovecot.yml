@@ -1,0 +1,63 @@
+- name: Install Dovecot and related packages
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - dovecot-core
+    - dovecot-imapd
+    - dovecot-pop3d
+    - dovecot-lmtpd
+    - dovecot-managesieved
+    - dovecot-mysql
+
+
+- name: Create vmail group
+  group: name=vmail state=present gid=5000
+
+- name: Create vmail user
+  user: name=vmail group=vmail state=present uid=5000 home=/decrypted
+
+- name: Ensure mail domain directories are in place
+  file: state=directory path={{virtual_mailbox_dir}}/{{ item.name }} owner=vmail group=dovecot mode=770
+  with_items: mail_virtual_domains
+
+- name: Ensure mail directories are in place
+  file: state=directory path={{virtual_mailbox_dir}}/{{ item.domain }}/{{ item.account }} owner=vmail group=dovecot
+  with_items: mail_virtual_users
+
+- name: Copy dovecot.conf into place
+  copy: src=dovecot/dovecot.conf dest=/etc/dovecot/dovecot.conf
+
+- name: template email configuration
+  template: src=dovecot/conf.d/10-mail.conf.j2  dest=/etc/dovecot/conf.d/10-mail.conf
+  notify: Restart dovecot
+
+
+- name: Copy additional Dovecot configuration files in place
+  copy: src=dovecot/conf.d/{{ item }} dest=/etc/dovecot/conf.d/{{ item }}
+  with_items:
+    - 10-auth.conf
+    - 10-master.conf
+    - 10-ssl.conf
+  notify: Restart dovecot
+
+- name: template auth configuration
+  template: src=dovecot/conf.d/auth-sql.conf.ext.j2  dest=/etc/dovecot/conf.d/auth-sql.conf.ext.j2
+  notify: Restart dovecot
+
+- name: Template 15-lda.conf
+  template: src=dovecot/conf.d/15-lda.conf.j2 dest=/etc/dovecot/conf.d/15-lda.conf
+  notify: Restart dovecot
+
+- name: Template dovecot-sql.conf.ext
+  template: src=dovecot/dovecot-sql.conf.ext.j2 dest=/etc/dovecot/dovecot-sql.conf.ext
+  notify: Restart dovecot
+
+- name: Ensure correct permissions on Dovecot config directory
+  file: state=directory path=/etc/dovecot
+          group=dovecot owner=vmail mode=770 recurse=yes
+  notify: Restart dovecot
+
+- name: Set firewall rules for dovecot
+  ufw: rule=allow port={{ item }} proto=tcp
+  with_items:
+    - pop3s
+    - imaps

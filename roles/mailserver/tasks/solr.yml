@@ -1,0 +1,20 @@
+- name: Install Solr and related packages
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - solr-jetty
+    - dovecot-solr
+
+- name: Work around Debian bug and copy Solr schema file into place
+  copy: src=solr/conf/schema.xml dest=/etc/solr/conf/schema.xml group=root owner=root
+
+- name: make jetty container start
+  lineinfile: dest=/etc/default/jetty regexp=^NO_START line="NO_START=0"
+
+
+- name: Copy tweaked Solr config file into place
+  copy: src=solr/conf/solrconfig.xml dest=/etc/solr/conf/solrconfig.xml group=root owner=root
+  notify: Restart solr
+
+- name: Create Solr index directory
+  file: state=directory path=/var/solr group=jetty owner=jetty
+  notify: Restart solr

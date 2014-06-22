@@ -1,0 +1,16 @@
+virtual_mailbox_dir: /var/mail/vhosts/
+
+mailserver_hostname: "{{ansible_hostname}}"
+mailserver_main_domain: "{{mailserver_hostname}}"
+
+mailserver_create_db: yes
+mail_db_host: localhost
+
+mail_db_username: mailuser
+# mail_db_password: (required)
+mail_db_database: mailserver
+# mail_virtual_domains: (required)
+# mail_virtual_users: (required)
+# mail_virtual_aliases: (required)
+
+mail_db_admin_user: root

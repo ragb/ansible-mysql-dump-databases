@@ -1,0 +1,22 @@
+- name: Install ufw
+  apt: pkg=ufw state=present
+
+- name: Deny everything and enable UFW
+  ufw: state=enabled policy=deny
+
+
+
+- name: Set firewall rule for DNS
+  ufw: rule=allow port=domain
+
+#- name: Set firewall rule for mosh
+#  ufw: rule=allow port=60000:61000 proto=udp
+
+- name: Set firewall rules for default traffic
+  ufw: rule=allow port={{ item }} proto=tcp
+  with_items: ufw_default_open_tcp_ports
+
+- name: Check config of ufw
+  command: cat /etc/ufw/ufw.conf
+  register: ufw_config
+  changed_when: False  # never report as "changed"

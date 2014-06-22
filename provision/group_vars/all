@@ -1,0 +1,20 @@
+---
+common_users:
+  - username: ragb
+    password: $1$8Tj2T83i$4iqiX/5kFd9kr2tB4aQ5N.
+    sudo: yes
+    shell: /bin/bash
+
+
+core_packages:
+  - git
+  - vim
+  - screen
+  - python-software-properties
+
+
+admin_email: ruiandrebatista@gmail.com
+
+
+
+

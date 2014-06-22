@@ -1,0 +1,5 @@
+ufw_default_open_tcp_ports:
+  - ssh
+
+admin_email: root@localhost
+

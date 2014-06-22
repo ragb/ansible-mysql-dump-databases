@@ -1,0 +1,51 @@
+- name: Install Postfix 9.1 and related packages
+  apt: pkg={{ item }} state=installed
+  with_items:
+    - postfix
+    - libsasl2-modules
+    - sasl2-bin
+    - postgrey
+    - postfix-mysql
+    - postfix-pcre
+
+
+- name: Creates sql script to create mailserver database
+  template: src=mailserver.sql.j2 dest=/etc/postfix/mailserver.sql owner=root group=root
+
+- name: Creates mailserver database
+  mysql_db: name={{mail_db_database}} state=present
+    login_user={{mail_db_admin_user}} login_password={{mail_db_admin_password}} login_host={{mail_db_host}} target=/etc/postfix/mailserver.sql
+  when: mailserver_create_db
+  notify: Restart postfix
+
+- name: Creates mail server database user
+  mysql_user: name={{mail_db_username}} password={{mail_db_password}}
+    login_user={{mail_db_admin_user}} login_password={{mail_db_admin_password}} login_host={{mail_db_host}} priv={{mail_db_database}}.*:select
+  when: mailserver_create_db
+  notify: Restart postfix
+
+
+- name: copy postfix master configuration
+  copy: src=postfix/master.cf dest=/etc/postfix/master.cf owner=root group=root
+  notify: Restart postfix
+
+- name: Create postfix main.cf file
+  template: src=postfix/main.cf.j2 dest=/etc/postfix/main.cf owner=root group=root
+  notify: Restart postfix
+
+
+- name: Copy postfix mysql virtual configurations
+  template: src=postfix/{{item}}.cf.j2 dest=/etc/postfix/{{item}}.cf owner=root group=root
+  with_items:
+    - mysql-virtual-mailbox-domains
+    - mysql-virtual-mailbox-maps
+    - mysql-virtual-alias-maps
+  notify: Restart postfix
+
+
+
+- name: Set firewall rules for postfix
+  ufw: rule=allow port={{ item }} proto=tcp
+  with_items:
+    - smtp
+    - ssmtp

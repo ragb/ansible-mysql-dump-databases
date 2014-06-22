@@ -1,0 +1,28 @@
+---
+- name: Site configuration
+  hosts: all
+  sudo: yes
+  roles:
+    - common
+
+
+- name: Database configuration for MySQL
+  hosts: dbservers_mysql
+  sudo: yes
+  roles:
+    - {role: bennojoy.mysql, mysql_users: [], mysql_db: []}
+    - mysql-local-backup
+
+- name: Web server configuration
+  hosts: webservers
+  sudo: yes
+  roles:
+    - nginx
+
+- name: Mail server configuration
+  hosts: mailservers
+  sudo: yes
+  roles:
+    - mailserver
+
+

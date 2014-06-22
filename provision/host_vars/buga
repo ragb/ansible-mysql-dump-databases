@@ -1,0 +1,7 @@
+ mail_virtual_domains:
+  - name: ruiandrebatista.com
+    pk_id: 1
+
+ mail_virtual_users: []
+ mail_virtual_aliases: []
+

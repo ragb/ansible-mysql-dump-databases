@@ -1,0 +1,13 @@
+- name: Restart postfix
+  service: name=postfix state=restarted
+
+- name: Restart dovecot
+  service: name=dovecot state=restarted
+
+- name: Restart opendkim
+  service: name=opendkim state=restarted
+
+
+- name: Restart solr
+  service: name=jetty state=restarted
+
