@@ -1,0 +1,12 @@
+- name: Add php5 stable PPA
+  tags: php
+  apt_repository: repo=ppa:ondrej/php5 state=present
+
+- name: Install PHP5 fpm
+  tags: php
+  apt: name=php5-fpm state=latest
+
+- name: Copy www standard poo configuration
+  tags: php
+  copy: src=www.conf dest=/etc/php5/fpm/pool.d/www.conf
+  notify: Restart php5-fpm
