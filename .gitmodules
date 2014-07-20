@@ -4,3 +4,6 @@
 [submodule "roles/gitolite"]
 	path = roles/gitolite
 	url = git@github.com:silpion/ansible-gitolite.git
+[submodule "roles/docker-ubuntu"]
+	path = roles/docker_ubuntu
+	url = git@github.com:angstwad/docker.ubuntu.git

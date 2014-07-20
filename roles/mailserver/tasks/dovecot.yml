@@ -20,11 +20,29 @@
   with_items: mail_virtual_domains
 
 - name: Ensure mail directories are in place
-  file: state=directory path={{virtual_mailbox_dir}}/{{ item.domain }}/{{ item.account }} owner=vmail group=dovecot
+  file: state=directory path="{{virtual_mailbox_dir}}/{{ item.domain }}/{{ item.account }}/mail" owner=vmail group=dovecot
   with_items: mail_virtual_users
+
+
+- name: Copy SSL certificate into place
+  copy: content="{{mailserver_certificate}}" dest=/etc/ssl/certs/dovecot.pem mode=0444 owner=root group=root
+  when: mailserver_certificate is defined
+  notify:
+    - Restart dovecot
+    - Restart postfix
+
+
+- name: Copy SSL certificate key into place
+  copy: content="{{mailserver_certificate_key}}" dest=/etc/ssl/private/dovecot.pem mode=0400 owner=root group=root
+  when: mailserver_certificate_key is defined
+  notify:
+    - Restart dovecot
+    - Restart postfix
+
 
 - name: Copy dovecot.conf into place
   copy: src=dovecot/dovecot.conf dest=/etc/dovecot/dovecot.conf
+  notify: Restart dovecot
 
 - name: template email configuration
   template: src=dovecot/conf.d/10-mail.conf.j2  dest=/etc/dovecot/conf.d/10-mail.conf
@@ -37,6 +55,11 @@
     - 10-auth.conf
     - 10-master.conf
     - 10-ssl.conf
+    - 20-imap.conf
+    - 20-lmtp.conf
+    - 20-managesieve.conf
+    - 90-sieve.conf
+    - 90-plugin.conf
   notify: Restart dovecot
 
 - name: template auth configuration
@@ -55,6 +78,17 @@
   file: state=directory path=/etc/dovecot
           group=dovecot owner=vmail mode=770 recurse=yes
   notify: Restart dovecot
+
+- name: create sieve directory
+  file: path=/var/lib/dovecot/sieve/ state=directory owner=vmail group=vmail
+
+
+- name: Copy sieve global rules
+  copy: src=sieve/default.sieve dest=/var/lib/dovecot/sieve/default.sieve owner=vmail group=vmail
+  notify: Restart dovecot
+
+- name: Compiles global sieve rules
+  command: /usr/bin/sievec /var/lib/dovecot/sieve/default.sieve
 
 - name: Set firewall rules for dovecot
   ufw: rule=allow port={{ item }} proto=tcp

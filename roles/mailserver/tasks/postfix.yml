@@ -13,7 +13,7 @@
   template: src=mailserver.sql.j2 dest=/etc/postfix/mailserver.sql owner=root group=root
 
 - name: Creates mailserver database
-  mysql_db: name={{mail_db_database}} state=present
+  mysql_db: name={{mail_db_database}} state=import
     login_user={{mail_db_admin_user}} login_password={{mail_db_admin_password}} login_host={{mail_db_host}} target=/etc/postfix/mailserver.sql
   when: mailserver_create_db
   notify: Restart postfix

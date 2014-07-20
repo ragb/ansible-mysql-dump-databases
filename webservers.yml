@@ -1,0 +1,7 @@
+- name: web servers configuration
+  sudo: yes
+  hosts: webservers
+  roles:
+    - nginx
+
+

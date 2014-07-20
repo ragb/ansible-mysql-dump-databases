@@ -1,0 +1,20 @@
+- hosts: all
+  sudo: yes
+  roles:
+    - common
+
+
+- name: Database configuration for MySQL
+  hosts: dbservers_mysql
+  sudo: yes
+  roles:
+    - {role: bennojoy.mysql, mysql_users: [], mysql_db: []}
+    - mysql-local-backup
+
+- name: Mail sever role r
+  hosts: mailservers 
+  sudo: yes
+  roles:
+    - mailserver
+
+

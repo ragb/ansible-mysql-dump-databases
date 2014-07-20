@@ -4,7 +4,7 @@ mailserver_hostname: "{{ansible_hostname}}"
 mailserver_main_domain: "{{mailserver_hostname}}"
 
 mailserver_create_db: yes
-mail_db_host: localhost
+mail_db_host: 127.0.0.1
 
 mail_db_username: mailuser
 # mail_db_password: (required)

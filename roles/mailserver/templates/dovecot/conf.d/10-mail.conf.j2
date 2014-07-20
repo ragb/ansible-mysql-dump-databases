@@ -27,7 +27,8 @@
 #
 # <doc/wiki/MailLocation.txt>
 #
-mail_location = maildir:{{virtual_mailbox_dir}}/%d/%n
+mail_home = {{virtual_mailbox_dir}}/%d/%n
+mail_location = maildir:~/mail
 
 # If you need to set multiple mailbox locations or want to change default
 # namespace settings, you can do it by defining namespace sections.
@@ -129,8 +130,8 @@ namespace inbox {
 # System user and group used to access mails. If you use multiple, userdb
 # can override these by returning uid or gid fields. You can use either numbers
 # or names. <doc/wiki/UserIds.txt>
-#mail_uid =
-#mail_gid =
+mail_uid =vmail
+mail_gid = vmail
 
 # Group to enable temporarily for privileged operations. Currently this is
 # used only with INBOX when either its initial creation or dotlocking fails.

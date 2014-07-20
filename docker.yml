@@ -1,0 +1,7 @@
+- name: Installs docker in docker hosts
+  tags: docker
+  hosts: docker_hosts
+  sudo: yes
+  roles:
+    - docker_ubuntu
+

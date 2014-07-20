@@ -1,2 +1,17 @@
 orleans.ruiandrebatista.com
+godiva.ruiandrebatista.com
 vocalizer-nvda.com
+
+
+[mailservers]
+godiva.ruiandrebatista.com
+
+[dbservers_mysql]
+godiva.ruiandrebatista.com
+
+[docker_hosts]
+godiva.ruiandrebatista.com
+
+
+[webservers]
+godiva.ruiandrebatista.com
