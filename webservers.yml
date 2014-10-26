@@ -3,5 +3,6 @@
   hosts: webservers
   roles:
     - nginx
+    - php-fpm
 
 

@@ -1,0 +1,6 @@
+- name: docker web server
+  hosts: ragbshortener_servers
+  sudo: yes
+  roles:
+    - docker_ragbshortener
+

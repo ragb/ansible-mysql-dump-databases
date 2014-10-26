@@ -1,0 +1,6 @@
+- name: docker web server
+  hosts: docker_webservers
+  sudo: yes
+  roles:
+    - docker_http_proxy
+

@@ -1,0 +1,4 @@
+mail_db_username: mailserver
+mail_db_password: "martaMafalda"
+mail_db_admin_password: martaMafalda
+

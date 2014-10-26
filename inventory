@@ -12,6 +12,15 @@ godiva.ruiandrebatista.com
 [docker_hosts]
 godiva.ruiandrebatista.com
 
+[docker_webservers]
+godiva.ruiandrebatista.com
+
+
+[ragbshortener_servers]
+godiva.ruiandrebatista.com
 
 [webservers]
+godiva.ruiandrebatista.com
+
+[gitolite_servers]
 godiva.ruiandrebatista.com

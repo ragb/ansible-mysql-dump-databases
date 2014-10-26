@@ -22,3 +22,13 @@ mysql_backup_databases: # Redefine this
 mysql_backup_cron_time: daily
 
 mysql_backup_remove_databases: [] # Removes from crontab
+
+
+mysql_dump_path: /home/ragb/mysql_dumps/
+
+mysql_dump_databases:
+  - tipa_drupal
+  - ragb_megatts
+  - ragb_drupal_apec
+  - nvda_pt
+  - ragb_wp_personal

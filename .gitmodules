@@ -1,9 +1,6 @@
 [submodule "roles/mysql-local-backup"]
 	path = roles/mysql-local-backup
 	url = git@github.com:ragb/mysql-local-backup.git
-[submodule "roles/gitolite"]
-	path = roles/gitolite
-	url = git@github.com:silpion/ansible-gitolite.git
 [submodule "roles/docker-ubuntu"]
 	path = roles/docker_ubuntu
 	url = git@github.com:angstwad/docker.ubuntu.git

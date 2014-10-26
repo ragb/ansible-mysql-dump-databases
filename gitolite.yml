@@ -1,0 +1,6 @@
+- name: configure gitolite
+  sudo: yes
+  hosts: gitolite_servers
+  roles:
+    - gitolite
+
